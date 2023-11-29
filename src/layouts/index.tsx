@@ -1,5 +1,5 @@
 import React, { useEffect, useState, createContext, } from 'react'
-import { Layout, ConfigProvider, Menu, theme, Spin } from 'antd';
+import { Layout, ConfigProvider, Menu, theme } from 'antd';
 import { useNavigate, Outlet, useLocation } from 'umi';
 // @ts-ignore
 import type { Location } from "history";
@@ -20,10 +20,8 @@ const { Header, Content } = Layout;
 export interface AppContextType {
   siderHandler: (whether: boolean) => void;
 }
-
-
-
 export const AppContext = createContext<AppContextType>({} as AppContextType);
+
 
 const Index: React.FC = () => {
   const [userInfo, setUserInfo] = useState<any>();
