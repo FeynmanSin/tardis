@@ -38,7 +38,6 @@ const Index: React.FC = () => {
   const context: AppContextType = {
     siderHandler
   }
-
   useEffect(() => {
     fetchUserInfo();
     getHeaderMenuData();
@@ -128,9 +127,11 @@ const Index: React.FC = () => {
   }
 
   const fetchUserInfo = async () => {
+    console.log(">>>>>>>", location)
     try {
       setLoading(true);
       const res = await queryCurrentUser();
+      console.log('>>>>res', res)
       setUserInfo(res.data);
     } catch (error) {
       navigate(PageEnums.LOGIN, { replace: true });
