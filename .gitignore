@@ -7,3 +7,9 @@
 /src/.umi-test
 /dist
 .swc
+
+**/.DS_Store 
+.DS_Store 
+.DS_Store ?
+/.vscode/
+pnpm-lock.yaml
