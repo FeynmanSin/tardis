@@ -1,14 +1,11 @@
-import React, { useEffect } from 'react'
-import { Outlet, useNavigate } from 'umi'
+// import React from 'react'
+// import { Outlet } from 'umi'
 
-const Index: React.FC = () => {
-    const navigate = useNavigate();
-    useEffect(() => {
-        navigate('/home')
-    }, [])
-    return (
-        <Outlet />
-    )
-}
+// const Index: React.FC = () => {
+//   console.log(">>>>>>IIIIIIIIIII")
+//   return (
+//     <Outlet />
+//   )
+// }
 
-export default Index;
+// export default Index;
