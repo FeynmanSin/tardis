@@ -66,7 +66,7 @@ const VirtualList = () => {
         () => {
             obRef.current?.disconnect();
         }
-    }, [[]]);
+    }, []);
 
 
     // const a = () => {
@@ -81,7 +81,7 @@ const VirtualList = () => {
     //     })
     // }
 
-    const getData = async (page: number) => {
+    const getData = async () => {
         setLoading(true);
         const params = new URLSearchParams();
         params.append('num', '10');
@@ -110,10 +110,6 @@ const VirtualList = () => {
             setPage(prevPage => prevPage + 1);
         }
 
-        setTimeout(() => {
-            setDataSource((prevDataSource) => [...prevDataSource, ...new Array(3).fill(0)]);
-            setLoading(false);
-        }, 5000);
     }
 
 
@@ -143,7 +139,7 @@ const VirtualList = () => {
             }}>
                 {
                     visibleItems.length > 0 && visibleItems.map((item, index) => (
-                        <Suspense fallback={
+                        <Suspense key={item.id} fallback={
                             <Skeleton
                                 active
                                 style={{
@@ -155,7 +151,7 @@ const VirtualList = () => {
                                 }} />
                         }
                         >
-                            <Card key={index}
+                            <Card key={item.id}
                                 style={{
                                     width: 566,
                                     marginBottom: 16,
@@ -165,7 +161,8 @@ const VirtualList = () => {
                                 cover={
                                     <img
                                         alt="example"
-                                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                                        // src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                                        src={item.picUrl}
                                     />
                                 }
                                 actions={[
@@ -176,8 +173,8 @@ const VirtualList = () => {
                             >
                                 <Card.Meta
                                     avatar={<Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />}
-                                    title="Card title"
-                                    description="This is the description"
+                                    title={item.source}
+                                    description={item.title}
                                 />
                             </Card>
                         </Suspense>
