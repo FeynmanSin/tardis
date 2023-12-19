@@ -3,44 +3,26 @@ import { Skeleton, Spin, Card, Avatar } from 'antd';
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 
-
-const throttle = (func: Function, delay: number) => {
-    let throttled = false;
-    return (...args: any[]) => {
-        if (!throttled) {
-            func(...args);
-            throttled = true;
-            setTimeout(() => {
-                throttled = false;
-            }, delay);
-        }
-    }
+interface NewsArticle {
+    id: string;
+    ctime: string;
+    title: string;
+    description: string;
+    source: string;
+    picUrl: string;
+    url: string;
 }
-
-const debounce = (func: Function, delay: number) => {
-    let timeoutId: NodeJS.Timeout;
-    return (...args: any[]) => {
-        if (timeoutId) {
-            clearTimeout(timeoutId);
-        }
-        timeoutId = setTimeout(() => {
-            func(...args);
-        }, delay);
-    }
-
-}
-
 
 const VirtualList = () => {
-    const [dataSource, setDataSource] = useState<number[]>([]);//总数据
-    const [visibleItems, setVisibleItems] = useState<number[]>([]);//渲染到页面的数据
+    const [dataSource, setDataSource] = useState<NewsArticle[]>([]);//总数据
+    const [visibleItems, setVisibleItems] = useState<NewsArticle[]>([]);//渲染到页面的数据
     const [startIdx, setStartIdx] = useState(0);//开始项索引
     const [endIdx, setEndIdx] = useState(10);//结束项索引
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
     const obRef = useRef<IntersectionObserver | null>(null);
-    const { data, run } = useRequest(() => getData(), {
+    const { data, run } = useRequest(getData, {
         throttleWait: 2000,
         manual: true
     });
@@ -69,19 +51,7 @@ const VirtualList = () => {
     }, []);
 
 
-    // const a = () => {
-    //     console.log(">>>>>>")
-    //     return new Promise((resolve, eject) => {
-    //         resolve(true);
-    //         setPage(page + 1);
-    //         console.log('>>>>>page', page)
-    //         setDataSource((prevRenderData) => {
-    //             return [...prevRenderData, ...new Array(10).fill(0)];
-    //         });
-    //     })
-    // }
-
-    const getData = async () => {
+    async function getData() {
         setLoading(true);
         const params = new URLSearchParams();
         params.append('num', '10');
@@ -101,15 +71,14 @@ const VirtualList = () => {
                 setDataSource((prevRenderData) => {
                     return [...prevRenderData, ...data.result.newslist];
                 });
+                setPage(prevPage => prevPage + 1);
             }
 
         } catch (error) {
             console.log(">>>>>VirtualList error", error);
         } finally {
             setLoading(false);
-            setPage(prevPage => prevPage + 1);
         }
-
     }
 
 
@@ -161,7 +130,6 @@ const VirtualList = () => {
                                 cover={
                                     <img
                                         alt="example"
-                                        // src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
                                         src={item.picUrl}
                                     />
                                 }
