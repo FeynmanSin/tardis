@@ -1,5 +1,5 @@
 import React, { useEffect, useState, createContext, } from 'react'
-import { Layout, ConfigProvider, Menu, theme, Spin } from 'antd';
+import { Layout, ConfigProvider, Menu, theme } from 'antd';
 import { useNavigate, Outlet, useLocation } from 'umi';
 // @ts-ignore
 import type { Location } from "history";
@@ -20,13 +20,10 @@ const { Header, Content } = Layout;
 export interface AppContextType {
   siderHandler: (whether: boolean) => void;
 }
-
-
-
 export const AppContext = createContext<AppContextType>({} as AppContextType);
 
+
 const Index: React.FC = () => {
-  const [loading, setLoading] = useState<any>(false);
   const [userInfo, setUserInfo] = useState<any>();
   const [headerMenuData, setHeaderMenuData] = useState<any>();
   const [selectedHeaderMenuItem, setSelectedHeaderMenuItem] = useState<string>();
@@ -35,24 +32,23 @@ const Index: React.FC = () => {
   const [label, setLabel] = useState('');
   const navigate = useNavigate();
   const location: Location = useLocation();
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
+
   const context: AppContextType = {
     siderHandler
   }
 
   useEffect(() => {
-    fetchUserInfo();
+    // fetchUserInfo();
     getHeaderMenuData();
-  }, []);
+    getLabel();
+  }, [location]);
 
   useEffect(() => {
     getSiderMenuData();
   }, [selectedHeaderMenuItem]);
-
-  useEffect(() => {
-    if (location.pathname != '/login' && location.pathname != '/' && location.pathname != '/home') {
-      getLabel()
-    }
-  }, [location]);
 
   // 控制是否展示侧边栏
   function siderHandler(whether: boolean) {
@@ -60,15 +56,12 @@ const Index: React.FC = () => {
   }
 
   const getLabel = () => {
-    console.log(">>>>>>location.state", location.state)
     if (location.state) {
-      setLabel(location.state.label ? location.state.label : '');
+      setLabel(location.state.label);
+    } else {
+      setLabel('');
     }
   }
-
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
 
   const getHeaderMenuData = () => {
     let menu: {}[] = [];
@@ -85,7 +78,7 @@ const Index: React.FC = () => {
     const _location = `/${location.pathname.split('/')[1]}`
     const route = routes.find(item => {
       if (item.path == selectedHeaderMenuItem || item.path == _location) {
-        return item
+        return item;
       }
     });
     if (route && route.routes) {
@@ -118,7 +111,7 @@ const Index: React.FC = () => {
       setSiderMenuData(menu);
       setIsShowSider(true)
     } else {
-      setIsShowSider(false)
+      setIsShowSider(false);
     }
   }
 
@@ -129,13 +122,10 @@ const Index: React.FC = () => {
 
   const fetchUserInfo = async () => {
     try {
-      setLoading(true);
       const res = await queryCurrentUser();
       setUserInfo(res.data);
     } catch (error) {
       navigate(PageEnums.LOGIN, { replace: true });
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -143,46 +133,43 @@ const Index: React.FC = () => {
   return (
     <ConfigProvider locale={zhCN}>
       <AppContext.Provider value={context}>
-        <Spin spinning={loading}>
+        <Layout >
           {
-
+            location.pathname != '/login' && (
+              <Header style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{}} >Tardis</div>
+                <Menu theme="dark" mode="horizontal" items={headerMenuData} onClick={headerMenuClick} selectedKeys={[`/${location.pathname.split('/')[1]}`]} />
+              </Header>
+            )
+          }
+          <Layout>
+            {
+              isShowSider && <Sider siderMenuData={siderMenuData} />
+            }
             <Layout >
               {
-                location.pathname != '/login' && <Header style={{ display: 'flex', alignItems: 'center' }}>
-                  <div style={{}} >运行监控系统</div>
-                  <Menu theme="dark" mode="horizontal" items={headerMenuData} onClick={headerMenuClick} defaultSelectedKeys={[`/${location.pathname.split('/')[1]}`]} />
-                </Header>
+                label && (
+                  <div className="title-menu">
+                    <p className="title-menu-text">
+                      <span>{label}</span>
+                    </p>
+                  </div>
+                )
               }
-              <Layout>
-                {
-                  isShowSider && <Sider siderMenuData={siderMenuData} />
-                }
-                <Layout >
-                  {
-                    isShowSider && (
-                      <div className="title-menu">
-                        <p className="title-menu-text">
-                          <span>{label}</span>
-                        </p>
-                      </div>
-                    )
-                  }
-                  <Content
-                    style={{
-                      padding: 10,
-                      margin: 0,
-                      height: 'calc(100vh - 64px - 94px)',
-                      background: colorBgContainer,
-                      overflow: 'auto'
-                    }}
-                  >
-                    <Outlet />
-                  </Content>
-                </Layout>
-              </Layout>
+              <Content
+                style={{
+                  padding: 10,
+                  margin: 0,
+                  height: 'calc(100vh - 64px - 94px)',
+                  background: colorBgContainer,
+                  overflow: 'auto'
+                }}
+              >
+                <Outlet />
+              </Content>
             </Layout>
-          }
-        </Spin>
+          </Layout>
+        </Layout>
       </AppContext.Provider>
     </ConfigProvider>
   );

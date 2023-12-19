@@ -17,11 +17,13 @@ const Sider: React.FC<PropsWithChildren<{
       token: { colorBgContainer },
     } = theme.useToken();
 
-    const handlerMenu: (obj: { key: string }) => void = ({ key }) => {
-
-      let keyArr = key.split('/')
+    const handlerMenu: (obj: { key: string, keyPath: [] }) => void = ({ key, keyPath }) => {
+      console.log(">>>>>key", key)
+      console.log(">>>keyPath", keyPath)
+      console.log(">>>>>siderMenuData", siderMenuData)
       // @ts-ignore
-      let _d = siderMenuData?.find(item => item.key == `/${keyArr[1]}/${keyArr[2]}`);
+      let _d = siderMenuData?.find(item => item.key == keyPath[keyPath.length - 1]);
+      console.log('>>>>_d', _d)
       let label;
       if (_d) {
         // @ts-ignore
@@ -32,6 +34,9 @@ const Sider: React.FC<PropsWithChildren<{
       }
       navigate(key, { replace: true, state: { label } })
     }
+
+
+
     return (
       <Layout.Sider width={200} style={{ background: colorBgContainer }}>
         <Menu

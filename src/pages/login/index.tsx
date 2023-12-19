@@ -41,7 +41,6 @@ const Login: React.FC = () => {
           loginMode: "IMAGE_VERIFICATION_CODE"
         };
         const res = await login({ ...loginParams });
-        console.log(">>>>>>login res", res)
         if (CodeEnum.SUCCESS === res.code) {
           // 设置token
           setAcquireTokenTime(new Date().getTime())
@@ -69,7 +68,6 @@ const Login: React.FC = () => {
       setCaptchaData(res.data);
     }
     setCaptChaLoading(false);
-
   }
 
   return (
@@ -87,7 +85,7 @@ const Login: React.FC = () => {
         flexDirection: 'column',
         background: 'rgba(0,0,0,1)'
       }}>
-      <div style={{ marginBottom: 24, fontSize: 26, color: '#333333', fontWeight: 700 }}>运 行 监 控 系 统</div>
+      <div style={{ marginBottom: 24, fontSize: 26, color: '#333333', fontWeight: 700 }}>Tardis</div>
       <Form
         name="normal_login"
         className="login-form"

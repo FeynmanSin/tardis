@@ -75,7 +75,6 @@ const axiosInstance: AxiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use((config: CustomAxiosRequestConfig) => {
-  console.log('???????config', config)
   if (getAccessToken()) {
     const old = config.headers || {};
     const isToken = config.isToken === undefined ? true : config.isToken;
