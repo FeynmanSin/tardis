@@ -15,7 +15,8 @@
     "axios": "^1.6.0",
     "dayjs": "^1.11.10",
     "query-string": "^8.1.0",
-    "umi": "^4.0.87"
+    "umi": "^4.0.87",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.36",
